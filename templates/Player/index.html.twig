@@ -12,6 +12,7 @@
             <th>Damage</th>
             <th>Coef</th>
             <th>Fire rate</th>
+            <th>Potion</th>
         </thead>
         <tbody>
             {% for player in players %}
@@ -23,6 +24,9 @@
                     <td>{{ player.currentWeapon.damage }}</td>
                     <td>{{ player.currentWeapon.damageDistanceCoef }}</td>
                     <td>{{ player.currentWeapon.fireRate }}/s</td>
+                    {% for playerPotion in player.playerPotions %}
+                    <td> {{ playerPotion.potion.name }} {{ playerPotion.count }}</td>
+                    {% endfor %}
                 </tr>
             {% endfor %}
         </tbody>

@@ -35,13 +35,21 @@ class Player
     private $currentWeapon;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Potion")
+     * @return mixed
      */
-    private $potions;
+    public function getPlayerPotions()
+    {
+        return $this->playerPotions;
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="PlayerPotion", mappedBy="player", cascade={"persist"})
+     */
+    private $playerPotions;
 
     public function __construct()
     {
-        $this->potions = new ArrayCollection();
+        $this->playerPotions = new ArrayCollection();
     }
 
     public function getId()
@@ -95,17 +103,11 @@ class Player
         $this->potions = $potions;
     }
 
-    public function addPotions(Potion $potion){
-        $this->potions->add($potion);
-    }
-
-    public function removePotions(Potion $potion){
-        $this->potions->removeElement($potion);
-        $this->setPotions($this->potions);
-        $this->potions->clear();
-        foreach($this->potions as $potion){
-            $this->addPotions($potion);
+    public function addPlayerPotions(PlayerPotion $playerPotion){
+        if($this->playerPotions->contains($playerPotion)){
+            return;
         }
-
+        $this->playerPotions->add($playerPotion);
+        $playerPotion->setPlayer($this);
     }
 }
