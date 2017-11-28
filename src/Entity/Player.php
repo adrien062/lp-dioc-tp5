@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
+use phpDocumentor\Reflection\Types\Iterable_;
 
 /**
  * @ORM\Entity
@@ -30,6 +33,16 @@ class Player
      * @ORM\ManyToOne(targetEntity="Weapon")
      */
     private $currentWeapon;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Potion")
+     */
+    private $potions;
+
+    public function __construct()
+    {
+        $this->potions = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -64,5 +77,35 @@ class Player
     public function setCurrentWeapon(?Weapon $currentWeapon)
     {
         $this->currentWeapon = $currentWeapon;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPotions()
+    {
+        return $this->potions;
+    }
+
+    /**
+     * @param mixed $potions
+     */
+    public function setPotions($potions)
+    {
+        $this->potions = $potions;
+    }
+
+    public function addPotions(Potion $potion){
+        $this->potions->add($potion);
+    }
+
+    public function removePotions(Potion $potion){
+        $this->potions->removeElement($potion);
+        $this->setPotions($this->potions);
+        $this->potions->clear();
+        foreach($this->potions as $potion){
+            $this->addPotions($potion);
+        }
+
     }
 }
